@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🌸 小朋友課外活動記錄本 🌸</title>
+<style>
+:root{
+  --bg:#FFF9FB; --card:#FFFFFF; --line:#FFE3EC;
+  --text:#5C4A63; --muted:#AD9BB6;
+  --pink:#FF9EC4; --pink-dark:#F57BAA;
+  --radius:22px;
+  --shadow:0 4px 18px rgba(255,158,196,.16);
+  --shadow-lg:0 8px 26px rgba(255,158,196,.26);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--text);line-height:1.6;
+  font-family:"Hiragino Maru Gothic ProN","Yu Gothic UI","Yu Gothic",
+    "PingFang TC","Microsoft JhengHei","Noto Sans TC",-apple-system,sans-serif;
+  background:
+    radial-gradient(circle at 8% 4%, #FFE8F0 0%, transparent 38%),
+    radial-gradient(circle at 94% 8%, #E3F2FF 0%, transparent 38%),
+    radial-gradient(circle at 50% 102%, #FFF6E0 0%, transparent 52%),
+    var(--bg);
+  -webkit-font-smoothing:antialiased;min-height:100vh;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(#FFD1E3 1.6px, transparent 1.6px);
+  background-size:26px 26px;opacity:.4;
+}
+/* 男孩主題：切換 body.theme-boy 時整個色系會變藍 */
+body.theme-boy{
+  --bg:#F4FAFF; --line:#DCEDFB; --pink:#7EC8F0; --pink-dark:#4FA8DC;
+  --text:#3E5A6E; --muted:#93AEC2;
+  background:
+    radial-gradient(circle at 8% 4%, #E3F2FF 0%, transparent 38%),
+    radial-gradient(circle at 94% 8%, #E8F7F0 0%, transparent 38%),
+    radial-gradient(circle at 50% 102%, #FFF6E0 0%, transparent 52%),
+    var(--bg);
+}
+body.theme-boy::before{background-image:radial-gradient(#C9E4F7 1.6px, transparent 1.6px)}
+body.theme-boy header{background:linear-gradient(135deg,#D3ECFF 0%,#E8F5FF 45%,#E4FFF4 100%)}
+body.theme-boy header h1{color:#4E7A9C}
+body.theme-boy h2{color:#4E7A9C}
+body.theme-boy .stat:nth-child(1){background:linear-gradient(135deg,#E0F0FF,#C6E4FF)}
+body.theme-boy .stat:nth-child(2){background:linear-gradient(135deg,#E2F7EC,#C9EEDD)}
+body.theme-boy .stat:nth-child(3){background:linear-gradient(135deg,#FFF6DC,#FFE9B8)}
+body.theme-boy .stat:nth-child(4){background:linear-gradient(135deg,#EDE8FF,#D8E4FF)}
+body.theme-boy .stat b{color:#4C6D82}
+body.theme-boy button.primary{background:linear-gradient(135deg,#8FD4F5,#5FB4E4);box-shadow:0 6px 16px rgba(95,180,228,.4)}
+body.theme-boy button.primary:hover{box-shadow:0 10px 22px rgba(95,180,228,.5)}
+body.theme-boy .weekdays input:checked+span{background:linear-gradient(135deg,#8FD4F5,#5FB4E4)}
+body.theme-boy .sched-types input:checked+span{background:linear-gradient(135deg,#8FD4F5,#5FB4E4)}
+body.theme-boy summary{color:var(--pink-dark)}
+body.theme-boy .form-head h2::after{display:none}
+
+.wrap{max-width:1000px;margin:0 auto;padding:18px 16px 70px;position:relative;z-index:1}
+
+/* 主題切換列 */
+.theme-bar{
+  display:flex;justify-content:center;gap:10px;margin-bottom:14px;
+}
+.theme-bar button{
+  border:2px solid #fff;border-radius:999px;padding:9px 22px;cursor:pointer;
+  font-weight:800;font-size:13px;letter-spacing:.5px;transition:.18s;
+  box-shadow:0 3px 10px rgba(180,140,180,.18);
+}
+.theme-bar .tGirl{background:linear-gradient(135deg,#FFD9E8,#FFC0DC);color:#B25E85}
+.theme-bar .tBoy{background:linear-gradient(135deg,#D3ECFF,#B8E0FA);color:#3E7BA6}
+.theme-bar button.active{transform:translateY(-2px);box-shadow:0 6px 16px rgba(180,140,180,.32)}
+.theme-bar button.active::after{content:' ✓'}
+
+/* header */
+header{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#FFD9E8 0%,#FFEAF3 45%,#E4F2FF 100%);
+  border:3px dashed #FFFFFF;border-radius:28px;padding:24px 20px 20px;
+  margin-bottom:18px;box-shadow:var(--shadow-lg);transition:.3s;
+}
+header::before{content:'';position:absolute;width:120px;height:120px;top:-50px;right:-30px;
+  border-radius:50%;background:rgba(255,255,255,.55)}
+header::after{content:'';position:absolute;width:70px;height:70px;bottom:-30px;left:20px;
+  border-radius:50%;background:rgba(255,255,255,.45)}
+header h1{margin:0 0 16px;font-size:21px;letter-spacing:1px;text-align:center;
+  color:#8A5C7E;position:relative;z-index:1;text-shadow:0 2px 0 #fff;transition:.3s}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;position:relative;z-index:1}
+.stat{border-radius:18px;padding:12px 6px;text-align:center;
+  border:2px solid #fff;box-shadow:0 3px 10px rgba(180,140,180,.12);transition:transform .18s}
+.stat:hover{transform:translateY(-3px)}
+.stat:nth-child(1){background:linear-gradient(135deg,#FFE3EE,#FFCFE2)}
+.stat:nth-child(2){background:linear-gradient(135deg,#E2F7EC,#C9EEDD)}
+.stat:nth-child(3){background:linear-gradient(135deg,#FFF6DC,#FFE9B8)}
+.stat:nth-child(4){background:linear-gradient(135deg,#EAF0FF,#D8E4FF)}
+.stat b{display:block;font-size:21px;line-height:1.25;color:#6E5470;transition:.3s}
+.stat span{font-size:11.5px;color:#957D9E;font-weight:700}
+
+/* card */
+.card{background:var(--card);border-radius:var(--radius);padding:18px;
+  margin-bottom:16px;box-shadow:var(--shadow);border:2px solid #FFF0F5;transition:.3s}
+body.theme-boy .card{border-color:#EAF5FD}
+h2{font-size:16px;margin:0 0 14px;display:flex;align-items:center;gap:8px;
+  color:#7A5C80;transition:.3s}
+h2::after{content:'';flex:1;height:2px;border-radius:2px;
+  background:repeating-linear-gradient(90deg,#FFD9E8 0 8px,transparent 8px 16px)}
+body.theme-boy h2::after{background:repeating-linear-gradient(90deg,#C9E4F7 0 8px,transparent 8px 16px)}
+
+/* 小朋友管理 */
+.kid-list{display:flex;flex-wrap:wrap;gap:12px}
+.kid-card{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:18px;
+  border:2px solid #fff;box-shadow:0 3px 10px rgba(180,150,190,.14);
+  min-width:210px;flex:1 1 210px;transition:.18s;position:relative;
+}
+.kid-card:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(180,150,190,.22)}
+.kid-avatar{
+  width:46px;height:46px;border-radius:50%;display:grid;place-items:center;
+  font-size:24px;background:#fff;box-shadow:0 2px 8px rgba(150,120,150,.18);flex:none;
+}
+.kid-info{flex:1;min-width:0}
+.kid-info b{display:block;font-size:15px;color:#6E5470}
+.kid-info small{color:var(--muted);font-size:11.5px;font-weight:700}
+.kid-card .icon-btn{font-size:15px}
+.kid-add{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 16px;border-radius:18px;border:2px dashed #FFD9E8;
+  background:#FFFCFE;color:#C09BB4;font-weight:800;cursor:pointer;
+  font-size:13.5px;transition:.18s;min-width:170px;flex:1 1 170px;
+}
+.kid-add:hover{border-color:var(--pink);color:var(--pink-dark);background:#FFF6FA;transform:translateY(-2px)}
+body.theme-boy .kid-add{border-color:#C9E4F7;color:#8FB4CC}
+body.theme-boy .kid-add:hover{border-color:var(--pink);color:var(--pink-dark);background:#F2FAFF}
+
+/* 篩選列 */
+.kid-filter{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}
+.kid-filter button{
+  border:2px solid #FFE3EC;border-radius:999px;background:#fff;cursor:pointer;
+  padding:7px 16px;font-weight:800;font-size:12.5px;color:#9B82A6;transition:.16s;
+  display:flex;align-items:center;gap:6px;
+}
+.kid-filter button:hover{border-color:var(--pink);transform:translateY(-2px)}
+.kid-filter button.active{background:linear-gradient(135deg,#FFD9E8,#FFC0DC);color:#8A4E70;border-color:#fff;box-shadow:0 4px 10px rgba(255,140,185,.3)}
+body.theme-boy .kid-filter button.active{background:linear-gradient(135deg,#D3ECFF,#B8E0FA);color:#33668C}
+
+/* 表單 */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.span2{grid-column:span 2}
+.field label{font-size:12.5px;color:#A98BB0;font-weight:800}
+input,select,button,textarea{font:inherit;color:var(--text)}
+input[type=text],input[type=date],input[type=time],input[type=number],select{
+  padding:11px 13px;border:2px solid #FFE3EC;border-radius:15px;background:#FFFCFE;
+  width:100%;transition:.18s;font-size:14px}
+body.theme-boy input[type=text],body.theme-boy input[type=date],
+body.theme-boy input[type=time],body.theme-boy input[type=number],body.theme-boy select{
+  border-color:#DCEDFB;background:#FBFDFF}
+input::placeholder{color:#D9C8DF}
+input:focus,select:focus{outline:none;border-color:var(--pink);background:#fff;
+  box-shadow:0 0 0 4px #FFE8F0}
+body.theme-boy input:focus,body.theme-boy select:focus{box-shadow:0 0 0 4px #E3F2FF}
+input[type=color]{width:100%;height:44px;padding:4px;border:2px solid #FFE3EC;
+  border-radius:15px;background:#FFFCFE;cursor:pointer}
+
+/* 排程方式 */
+.sched-types{display:flex;gap:8px;flex-wrap:wrap}
+.sched-types label{cursor:pointer}
+.sched-types input{position:absolute;opacity:0;pointer-events:none}
+.sched-types span{display:inline-block;padding:9px 16px;border-radius:999px;
+  border:2px solid #FFE3EC;background:#FFFCFE;font-weight:800;font-size:12.5px;
+  color:#BCA5C4;transition:.18s}
+body.theme-boy .sched-types span{border-color:#DCEDFB;background:#FBFDFF;color:#9BB8CC}
+.sched-types input:checked+span{
+  background:linear-gradient(135deg,#FFB3D1,#FF8FBC);color:#fff;
+  border-color:#fff;box-shadow:0 4px 10px rgba(255,140,185,.4);transform:translateY(-2px)}
+
+.weekdays{display:flex;gap:8px;flex-wrap:wrap}
+.weekdays label{cursor:pointer}
+.weekdays input{position:absolute;opacity:0;pointer-events:none}
+.weekdays span{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;
+  border:2px solid #FFE3EC;background:#FFFCFE;font-weight:800;color:#BCA5C4;
+  transition:.18s;font-size:14px}
+body.theme-boy .weekdays span{border-color:#DCEDFB;background:#FBFDFF;color:#9BB8CC}
+.weekdays input:checked+span{background:linear-gradient(135deg,#FFB3D1,#FF8FBC);
+  color:#fff;border-color:#fff;transform:translateY(-2px);
+  box-shadow:0 5px 12px rgba(255,140,185,.42)}
+
+/* 暫停期間 */
+.pause-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.pause-row input{flex:1;min-width:130px}
+.pause-row .tilde{color:#D4B8E0;font-weight:800}
+.pDel{background:#FFF0F5;border:2px solid #FFD9E8;border-radius:12px;
+  width:34px;height:38px;cursor:pointer;color:#E07A9E;font-weight:800;transition:.16s}
+.pDel:hover{background:#FFD9E8}
+
+/* 預覽 */
+.preview{margin-top:12px;padding:12px 14px;border-radius:16px;
+  background:linear-gradient(135deg,#FFF6FA,#F3F9FF);
+  border:2px dashed #FFD9E8;font-size:12.5px;color:#8B7495;font-weight:700}
+body.theme-boy .preview{background:linear-gradient(135deg,#F2FAFF,#F3F9FF);border-color:#C9E4F7}
+.preview b{color:var(--pink-dark)}
+.preview .dates{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.preview .dtag{background:#fff;border:1.5px solid #FFE3EC;border-radius:999px;
+  padding:2px 10px;font-size:11.5px;color:#9B82A6;font-variant-numeric:tabular-nums}
+body.theme-boy .preview .dtag{border-color:#DCEDFB}
+
+/* 按鈕 */
+button.primary{background:linear-gradient(135deg,#FFA9CD,#FF87B8);color:#fff;
+  border:3px solid #fff;border-radius:999px;padding:13px 30px;font-weight:800;
+  cursor:pointer;margin-top:16px;letter-spacing:1px;font-size:14.5px;
+  box-shadow:0 6px 16px rgba(255,140,185,.4);transition:.18s}
+button.primary:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(255,140,185,.5)}
+button.ghost{background:#fff;border:2px solid #FFE3EC;border-radius:999px;
+  padding:8px 16px;cursor:pointer;color:#AD9BB6;font-size:13px;font-weight:700;transition:.16s}
+body.theme-boy button.ghost{border-color:#DCEDFB}
+button.ghost:hover{border-color:var(--pink);color:var(--pink-dark);background:#FFF6FA}
+.form-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px}
+.form-head h2{margin:0;flex:1}
+.form-head h2::after{display:none}
+
+/* 活動卡 */
+.act{position:relative;border-left:9px solid var(--c,#FF9EC4);border-radius:20px;overflow:hidden}
+.act::after{content:'';position:absolute;top:0;right:0;width:80px;height:80px;
+  background:radial-gradient(circle at 100% 0%, var(--c,#FF9EC4) 0%, transparent 70%);
+  opacity:.12;pointer-events:none}
+.act-head{display:flex;align-items:flex-start;gap:8px;position:relative;z-index:1}
+.act-head h3{margin:0;font-size:17px;flex:1;color:#6E5470}
+.act .meta{display:flex;flex-wrap:wrap;gap:10px;font-size:12.5px;color:var(--muted);
+  margin-top:5px;font-weight:600}
+.act .owner{
+  display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:800;
+  padding:2px 10px;border-radius:999px;background:#fff;border:2px solid #fff;
+  box-shadow:0 2px 6px rgba(180,150,190,.18);margin-bottom:4px;
+}
+.icon-btn{background:none;border:none;font-size:16px;cursor:pointer;padding:5px 7px;
+  border-radius:12px;transition:.16s;line-height:1}
+.icon-btn:hover{background:#FFEFF6;transform:scale(1.18)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+.chip{font-size:12.5px;padding:5px 12px;border-radius:999px;background:#F7F1FA;
+  color:#8B7495;font-weight:800;border:2px solid #fff;
+  box-shadow:0 2px 6px rgba(180,150,190,.12)}
+.chip.ok{background:#DFF6EA;color:#3E9C77}
+.chip.next{background:#FFF3D6;color:#C2882A}
+.chip.money{background:#EDE8FF;color:#7061C9}
+.chip.pause{background:#FFE9E9;color:#C46161}
+
+.items{margin:12px 0 0;font-size:13px;color:#7E6885;background:#FFF7FB;
+  border-radius:14px;padding:9px 14px;border:2px dashed #FFE0EE;font-weight:600}
+body.theme-boy .items{background:#F5FBFF;border-color:#DCEDFB;color:#5E7E96}
+
+details{margin-top:14px;border-top:2px dashed #FFE9F2;padding-top:12px}
+summary{cursor:pointer;font-size:13.5px;font-weight:800;color:var(--pink-dark);
+  list-style:none;user-select:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"🌸 ";display:inline-block;transition:.25s}
+body.theme-boy summary::before{content:"💙 "}
+details[open] summary::before{transform:rotate(72deg)}
+ul.sessions{list-style:none;padding:0;margin:12px 0 0;max-height:300px;overflow:auto}
+ul.sessions li{display:flex;align-items:center;gap:8px;font-size:13px;padding:7px 10px;
+  border-radius:12px;font-weight:600;transition:.16s}
+ul.sessions li:nth-child(odd){background:#FFFAFC}
+body.theme-boy ul.sessions li:nth-child(odd){background:#F8FCFF}
+ul.sessions li:hover{background:#FFF0F7}
+ul.sessions li.done{color:#B6A6BE}
+ul.sessions li.done .sdate{text-decoration:line-through}
+ul.sessions li.now{background:#FFF3D6;color:#B87F1E;font-weight:800}
+ul.sessions li.off{opacity:.42}
+ul.sessions li.off .sdate{text-decoration:line-through}
+.sdate{min-width:122px;font-variant-numeric:tabular-nums}
+.stst{font-size:11px;padding:3px 9px;border-radius:999px;background:#F4EEF8;
+  color:#9C87A6;font-weight:800;white-space:nowrap}
+li.now .stst{background:#FFE7B0;color:#9A6A12}
+li.done .stst{background:#D8F3E6;color:#368C69}
+button.mini{background:none;border:none;cursor:pointer;font-size:12px;color:#B7A4BF;
+  padding:3px 8px;border-radius:9px;font-weight:700;transition:.16s}
+button.mini:hover{background:#FFE8F3;color:var(--pink-dark)}
+a.mini{text-decoration:none;font-size:13px;padding:3px 6px;border-radius:9px;transition:.16s}
+a.mini:hover{background:#FFE8F3}
+
+.row-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.row-actions button{font-size:12.5px;background:#FFF7FB;border:2px solid #FFE3EC;
+  border-radius:999px;padding:7px 15px;cursor:pointer;color:#9B82A6;font-weight:800;transition:.16s}
+body.theme-boy .row-actions button{background:#F5FBFF;border-color:#DCEDFB}
+.row-actions button:hover{border-color:var(--pink);color:var(--pink-dark);
+  background:#FFEDF5;transform:translateY(-2px)}
+
+/* 圖表 */
+.bar-row{display:grid;grid-template-columns:112px 1fr 68px;align-items:center;
+  gap:11px;margin-bottom:12px;font-size:13px}
+.bar-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-weight:800;color:#7A6482}
+.bar-track{height:20px;background:#F7F0FA;border-radius:999px;overflow:hidden}
+body.theme-boy .bar-track{background:#EFF7FC}
+.bar-fill{height:100%;border-radius:999px;transition:width .45s;
+  background-image:linear-gradient(45deg,rgba(255,255,255,.45) 25%,transparent 25%,
+    transparent 50%,rgba(255,255,255,.45) 50%,rgba(255,255,255,.45) 75%,transparent 75%);
+  background-size:14px 14px;animation:stripe 1.1s linear infinite}
+@keyframes stripe{from{background-position:0 0}to{background-position:14px 0}}
+.bar-val{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;
+  font-size:12.5px;font-weight:800}
+.empty{color:#C5B2CD;text-align:center;padding:30px 0;font-size:14px;font-weight:700}
+
+ul.sessions::-webkit-scrollbar{width:8px}
+ul.sessions::-webkit-scrollbar-track{background:#FFF3F8;border-radius:9px}
+ul.sessions::-webkit-scrollbar-thumb{background:#FFC9DE;border-radius:9px}
+
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-7px) rotate(6deg)}}
+header h1::before{content:'🌸';display:inline-block;margin-right:8px;
+  animation:floaty 3s ease-in-out infinite}
+header h1::after{content:'🌸';display:inline-block;margin-left:8px;
+  animation:floaty 3s ease-in-out infinite .6s}
+body.theme-boy header h1::before,
+body.theme-boy header h1::after{content:'💙'}
+
+[hidden]{display:none!important}
+
+@media(max-width:560px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .field.span2{grid-column:span 1}
+  .bar-row{grid-template-columns:84px 1fr 60px}
+  .sdate{min-width:98px}
+  header h1{font-size:17px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 主題切換 -->
+  <div class="theme-bar">
+    <button type="button" class="tGirl active" data-theme="girl">👧 女孩版</button>
+    <button type="button" class="tBoy" data-theme="boy">👦 男孩版</button>
+  </div>
+
+  <header>
+    <h1>小朋友課外活動記錄本</h1>
+    <div class="stats">
+      <div class="stat"><b id="statKids">0</b><span>🧒 小朋友</span></div>
+      <div class="stat"><b id="statDone">0</b><span>✅ 已上課堂</span></div>
+      <div class="stat"><b id="statUp">0</b><span>⏳ 待上課堂</span></div>
+      <div class="stat"><b id="statMoney">$0</b><span>💰 已花費</span></div>
+    </div>
+  </header>
+
+  <!-- 小朋友管理 -->
+  <section class="card">
+    <h2>🧒 我的小朋友</h2>
+    <div class="kid-list" id="kidList"></div>
+    <p style="font-size:12.5px;color:var(--muted);font-weight:700;margin:12px 0 0">
+      💡 新增活動時可選擇屬於哪一位小朋友，方便分開記錄與統計。
+    </p>
+  </section>
+
+  <!-- 篩選 -->
+  <div class="kid-filter" id="kidFilter"></div>
+
+  <!-- 新增／編輯活動 -->
+  <form id="actForm" class="card">
+    <div class="form-head">
+      <h2 id="formTitle">➕ 新增活動</h2>
+      <button type="button" id="cancelEdit" class="ghost" hidden>取消編輯</button>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>🧒 屬於哪位小朋友 *</label>
+        <select name="kidId" id="kidSelect" required></select>
+      </div>
+
+      <div class="field">
+        <label>🎀 活動名稱 *</label>
+        <input name="name" type="text" required placeholder="例：游泳班">
+      </div>
+
+      <div class="field span2">
+        <label>📍 活動地點</label>
+        <input name="location" type="text" placeholder="例：XX 游泳池">
+      </div>
+
+      <div class="field span2">
+        <label>🗓️ 排程方式（活動不一定每週都有？這裡可以選）</label>
+        <div class="sched-types" id="schedTypes">
+          <label><input type="radio" name="scheduleType" value="weekly" checked><span>每週固定</span></label>
+          <label><input type="radio" name="scheduleType" value="biweekly"><span>隔週</span></label>
+          <label><input type="radio" name="scheduleType" value="monthlyDate"><span>每月某幾日</span></label>
+          <label><input type="radio" name="scheduleType" value="monthlyNth"><span>每月第幾個</span></label>
+          <label><input type="radio" name="scheduleType" value="once"><span>單次活動</span></label>
+          <label><input type="radio" name="scheduleType" value="range"><span>連續幾天</span></label>
+          <label><input type="radio" name="scheduleType" value="custom"><span>自訂日期</span></label>
+        </div>
+      </div>
+
+      <div class="field span2 sched-panel" data-panel="weekly biweekly">
+        <label>星期幾 *（可多選）</label>
+        <div class="weekdays" id="weekdayBox"></div>
+      </div>
+
+      <div class="field span2 sched-panel" data-panel="monthlyDate" hidden>
+        <label>每月幾號（用逗號分隔，例：5,20）</label>
+        <input name="monthDays" type="text" placeholder="例：5,20">
+      </div>
+
+      <div class="field span2 sched-panel" data-panel="monthlyNth" hidden>
+        <label>每月第幾個星期幾</label>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <select name="nth" style="flex:1;min-width:120px">
+            <option value="1">第 1 個</option>
+            <option value="2">第 2 個</option>
+            <option value="3">第 3 個</option>
+            <option value="4">第 4 個</option>
+            <option value="5">最後一個</option>
+          </select>
+          <select name="nthWeekday" style="flex:1;min-width:120px"></select>
+        </div>
+      </div>
+
+      <div class="field span2 sched-panel" data-panel="custom" hidden>
+        <label>自訂日期（用逗號分隔，例：2025-03-01, 2025-03-15）</label>
+        <input name="customDates" type="text" placeholder="2025-03-01, 2025-03-15">
+      </div>
+
+      <div class="field">
+        <label id="lblStart">📆 開始日期 *</label>
+        <input name="startDate" type="date" required>
+      </div>
+
+      <div class="field">
+        <label id="lblEnd">🏁 結束日期（留空＝自動 3 個月）</label>
+        <input name="endDate" type="date">
+      </div>
+
+      <div class="field span2">
+        <label>⏸️ 暫停期間（選填｜假期、考試週、旅行等，可加多段）</label>
+        <div id="pauseList"></div>
+        <button type="button" id="addPause" class="ghost" style="align-self:flex-start">
+          ＋ 新增暫停期間
+        </button>
+      </div>
+
+      <div class="field">
+        <label>⏰ 開始時間</label>
+        <input name="startTime" type="time" value="16:00">
+      </div>
+
+      <div class="field">
+        <label>⏱️ 結束時間</label>
+        <input name="endTime" type="time" value="17:00">
+      </div>
+
+      <div class="field">
+        <label>💰 每堂費用 $</label>
+        <input name="fee" type="number" min="0" step="1" value="0">
+      </div>
+
+      <div class="field">
+        <label>🏦 學費總額 $</label>
+        <input name="tuition" type="number" min="0" step="1" value="0">
+      </div>
+
+      <div class="field">
+        <label>🎨 代表顏色</label>
+        <input name="color" type="color" value="#FF9EC4">
+        <div class="swatches" style="display:flex;gap:7px;flex-wrap:wrap;margin-top:4px">
+          <button type="button" data-color="#FF9EC4" style="width:26px;height:26px;border-radius:50%;background:#FF9EC4;border:2px solid #fff;cursor:pointer;box-shadow:0 2px 6px rgba(150,120,150,.25)"></button>
+          <button type="button" data-color="#FFB7A5" style="width:26px;height:26px;border-radius:50%;background:#FFB7A5;border:2px solid #fff;cursor:pointer;box-shadow:0 2px 6px rgba(150,120,150,.25)"></button>
+          <button type="button" data-color="#FFD98E" style="width:26px;height:26px;border-radius:50%;background:#FFD98E;border:2px solid #fff;cursor:pointer;box-shadow:0 2px 6px rgba(150,120,150,.25)"></button>
+          <button type="button" data-color="#A8DFC0" style="width:26px;height:26px;border-radius:50%;background:#A8DFC0;border:2px solid #fff;cursor:pointer;box-shadow:0 2px 6px rgba(150,120,150,.25)"></button>
+          <button type="button" data-color="#A8D8EA" style="width:26px;height:26px;border-radius:50%;background:#A8D8EA;border:2px solid #fff;cursor:pointer;box-shadow:0 2px 6px rgba(150,120,150,.25)"></button>
+          <button type="button" data-color="#C9B6F0" style="width:26px;height:26px;border-radius:50%;background:#C9B6F0;border:2px solid #fff;cursor:pointer;box-shadow:0 2px 6px rgba(150,120,150,.25)"></button>
+        </div>
+      </div>
+
+      <div class="field span2">
+        <label>🎒 需要帶備的東西</label>
+        <input name="items" type="text" placeholder="例：泳衣、泳帽、毛巾、水樽">
+      </div>
+
+      <div class="field span2">
+        <div class="preview" id="preview">🌸 填好上面的資料，這裡會即時顯示會產生幾堂課。</div>
+      </div>
+    </div>
+
+    <button class="primary" type="submit" id="submitBtn">✿ 新增活動 ✿</button>
+  </form>
+
+  <section>
+    <h2 style="margin:22px 6px 12px" id="listTitle">📋 活動列表</h2>
+    <div id="activityList"></div>
+  </section>
+
+  <section class="card">
+    <h2>📊 已上課堂統計</h2>
+    <div id="chart"></div>
+  </section>
+
+  <div class="row-actions" style="justify-content:center;margin-top:20px">
+    <button id="exportAll">⬇️ 匯出全部課堂（.ics 可匯入 Google 日曆）</button>
+    <button id="clearAll" style="color:#E07A9E">🗑️ 清除全部資料</button>
+  </div>
+
+</div>
+
+<script>
+/* ==================== 工具函式 ==================== */
+const WD = ['日','一','二','三','四','五','六'];
+const pad2 = n => String(n).padStart(2,'0');
+const fmtDate = d => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+const parseDate = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+const addDays = (d,n) => { const x = new Date(d.getTime()); x.setDate(x.getDate()+n); return x; };
+const startOfWeek = d => addDays(d, -d.getDay());
+const todayStr = () => fmtDate(new Date());
+const uid = () => Math.random().toString(36).slice(2,9);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ==================== 頭像選項 ==================== */
+const AVATARS_GIRL = ['👧','👩','🎀','🌸','🐰','🦄','🐱','🍓'];
+const AVATARS_BOY  = ['👦','👨','⚽','🚀','🦖','🐯','🐶','🍀'];
+const ALL_AVATARS  = [...new Set([...AVATARS_GIRL, ...AVATARS_BOY])];
+
+/* ==================== 資料儲存 ==================== */
+const KEY = 'kid_activities_v3';
+let state = load();
+let editingId = null;
+let pauses = [];
+let filterKid = 'all';    // 'all' 或 小朋友 id
+
+function load(){
+  try {
+    const raw = localStorage.getItem(KEY)
+             || localStorage.getItem('kid_activities_v2')
+             || localStorage.getItem('kid_activities_v1');
+    if (raw){
+      const s = JSON.parse(raw);
+      s.kids = s.kids || [];
+      // 舊資料：若沒有小朋友，建立預設一位
+      if (!s.kids.length){
+        const firstColor = (s.activities||[]).find(a => a.color)?.color || '#FF9EC4';
+        s.kids.push({ id: uid(), name: '寶貝', avatar: '🧒', color: firstColor });
+      }
+      s.kidFilter = 'all';
+      (s.activities||[]).forEach(a => {
+        normalize(a);
+        if (!a.kidId) a.kidId = s.kids[0].id;
+      });
+      // 主題（女孩/男孩）
+      s.theme = s.theme || 'girl';
+      return s;
+    }
+  } catch(e){}
+  return {
+    kids: [{ id: uid(), name: '寶貝', avatar: '🧒', color: '#FF9EC4' }],
+    activities: [],
+    theme: 'girl',
+    kidFilter: 'all'
+  };
+}
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(state)); }
+  catch(e){ alert('儲存失敗，瀏覽器可能封鎖了本機儲存。'); }
+}
+function normalize(act){
+  if (!act.scheduleType){
+    act.scheduleType = (act.interval === 2) ? 'biweekly' : 'weekly';
+  }
+  act.pauses = act.pauses || [];
+  return act;
+}
+const kidById = id => state.kids.find(k => k.id === id) || { name:'未指定', avatar:'❓', color:'#CCCCCC' };
+
+/* ==================== 核心：日期產生引擎 ==================== */
+function generateDates(act){
+  const res = [];
+  const type = act.scheduleType || 'weekly';
+  if (!act.startDate && type !== 'custom') return res;
+
+  if (type === 'once') return act.startDate ? [act.startDate] : [];
+
+  if (type === 'custom'){
+    return String(act.customDates || '')
+      .split(/[,，\s]+/).map(s => s.trim())
+      .filter(s => /^\d{4}-\d{2}-\d{2}$/.test(s))
+      .filter(s => !isNaN(parseDate(s).getTime()))
+      .sort();
+  }
+
+  const start = parseDate(act.startDate);
+  const end = act.endDate ? parseDate(act.endDate) : addDays(start, 90);
+
+  if (type === 'range'){
+    let d = new Date(start), guard = 0;
+    while (d <= end && guard++ < 400){ res.push(fmtDate(d)); d = addDays(d, 1); }
+    return [...new Set(res)].sort();
+  }
+
+  if (type === 'weekly' || type === 'biweekly'){
+    const interval = type === 'biweekly' ? 2 : 1;
+    const wds = [...(act.weekdays || [])].sort((a,b) => a-b);
+    if (!wds.length) return res;
+    let ws = startOfWeek(start), wi = 0, guard = 0;
+    while (ws <= end && guard++ < 600){
+      if (wi % interval === 0){
+        for (const wd of wds){
+          const d = addDays(ws, wd);
+          if (d >= start && d <= end) res.push(fmtDate(d));
+        }
+      }
+      ws = addDays(ws, 7); wi++;
+    }
+    return [...new Set(res)].sort();
+  }
+
+  if (type === 'monthlyDate'){
+    const days = (act.monthDays || []).filter(n => n >= 1 && n <= 31).sort((a,b) => a-b);
+    if (!days.length) return res;
+    let y = start.getFullYear(), m = start.getMonth(), guard = 0;
+    while (guard++ < 72){
+      const monthStart = new Date(y, m, 1);
+      if (monthStart > end) break;
+      for (const dd of days){
+        const d = new Date(y, m, dd);
+        if (d.getMonth() !== m) continue;
+        if (d >= start && d <= end) res.push(fmtDate(d));
+      }
+      m++; if (m > 11){ m = 0; y++; }
+    }
+    return [...new Set(res)].sort();
+  }
+
+  if (type === 'monthlyNth'){
+    const nth = +act.nth || 1;
+    const wd  = (act.nthWeekday !== undefined && act.nthWeekday !== null) ? +act.nthWeekday : 6;
+    let y = start.getFullYear(), m = start.getMonth(), guard = 0;
+    while (guard++ < 72){
+      const monthStart = new Date(y, m, 1);
+      if (monthStart > end) break;
+      let d = null;
+      if (nth === 5){
+        const last = new Date(y, m + 1, 0);
+        const diff = (last.getDay() - wd + 7) % 7;
+        d = new Date(y, m, last.getDate() - diff);
+      } else {
+        const firstWd = monthStart.getDay();
+        const offset = (wd - firstWd + 7) % 7;
+        const day = 1 + offset + (nth - 1) * 7;
+        const tmp = new Date(y, m, day);
+        if (tmp.getMonth() === m) d = tmp;
+      }
+      if (d && d >= start && d <= end) res.push(fmtDate(d));
+      m++; if (m > 11){ m = 0; y++; }
+    }
+    return [...new Set(res)].sort();
+  }
+
+  return [...new Set(res)].sort();
+}
+
+function getSessions(act){
+  let base = generateDates(act);
+  const ps = act.pauses || [];
+  if (ps.length){
+    base = base.filter(d => !ps.some(p => p.from && p.to && d >= p.from && d <= p.to));
+  }
+  const ex = new Set(act.excluded || []);
+  const set = new Set(base.filter(d => !ex.has(d)));
+  (act.extra || []).forEach(d => set.add(d));
+  return [...set].sort();
+}
+
+function getActive(act){
+  const cancelled = new Set(act.cancelled || []);
+  return getSessions(act).filter(d => !cancelled.has(d));
+}
+
+function schedDesc(act){
+  const t = act.scheduleType || 'weekly';
+  if (t === 'weekly')      return `每週星期${(act.weekdays||[]).map(w => WD[w]).join('、')}`;
+  if (t === 'biweekly')    return `隔週星期${(act.weekdays||[]).map(w => WD[w]).join('、')}`;
+  if (t === 'monthlyDate') return `每月 ${(act.monthDays||[]).join('、')} 號`;
+  if (t === 'monthlyNth')  return `每月第 ${act.nth === 5 ? '最後' : act.nth} 個星期${WD[act.nthWeekday] ?? ''}`;
+  if (t === 'once')        return `單次活動`;
+  if (t === 'range')       return `連續每天`;
+  if (t === 'custom')      return `自訂日期`;
+  return '';
+}
+
+/* ==================== Google 日曆 / ICS ==================== */
+function buildDetails(act){
+  const p = [];
+  const kid = kidById(act.kidId);
+  if (act.kidId) p.push('小朋友：' + kid.name);
+  if (act.items)   p.push('需帶物品：' + act.items);
+  if (act.fee)     p.push('每堂費用：$' + act.fee);
+  if (act.tuition) p.push('學費總額：$' + act.tuition);
+  return p.join('\n');
+}
+
+function gcalLink(act, dateStr){
+  const [sh,sm] = (act.startTime || '09:00').split(':');
+  const [eh,em] = (act.endTime   || '10:00').split(':');
+  const d = dateStr.replace(/-/g,'');
+  const kid = kidById(act.kidId);
+  const params = new URLSearchParams({
+    action:'TEMPLATE',
+    text: `${kid.avatar || ''} ${act.name}`.trim(),
+    dates: `${d}T${sh}${sm}00/${d}T${eh}${em}00`,
+    ctz: 'Asia/Hong_Kong',
+    location: act.location || '',
+    details: buildDetails(act)
+  });
+  return 'https://calendar.google.com/calendar/render?' + params.toString();
+}
+
+const icsEsc = s => String(s || '')
+  .replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n');
+
+function buildICS(activities){
+  const lines = [
+    'BEGIN:VCALENDAR','VERSION:2.0',
+    'PRODID:-//KidsActivities//ZH-Hant//EN',
+    'CALSCALE:GREGORIAN','METHOD:PUBLISH'
+  ];
+  const stamp = new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'') + 'Z';
+
+  activities.forEach(act => {
+    const st = (act.startTime || '09:00').replace(':','') + '00';
+    const en = (act.endTime   || '10:00').replace(':','') + '00';
+    const cancelled = new Set(act.cancelled || []);
+    const kid = kidById(act.kidId);
+
+    getSessions(act).filter(d => !cancelled.has(d)).forEach(d => {
+      const ds = d.replace(/-/g,'');
+      lines.push('BEGIN:VEVENT');
+      lines.push(`UID:${act.id}-${ds}@kid-activities`);
+      lines.push(`DTSTAMP:${stamp}`);
+      lines.push(`DTSTART;TZID=Asia/Hong_Kong:${ds}T${st}`);
+      lines.push(`DTEND;TZID=Asia/Hong_Kong:${ds}T${en}`);
+      lines.push(`SUMMARY:${icsEsc((kid.avatar||'') + ' ' + act.name)}`);
+      if (act.location) lines.push(`LOCATION:${icsEsc(act.location)}`);
+      const desc = buildDetails(act);
+      if (desc) lines.push(`DESCRIPTION:${icsEsc(desc)}`);
+      lines.push('BEGIN:VALARM','TRIGGER:-PT30M','ACTION:DISPLAY',
+                 'DESCRIPTION:活動提醒','END:VALARM');
+      lines.push('END:VEVENT');
+    });
+  });
+
+  lines.push('END:VCALENDAR');
+  return lines.join('\r\n');
+}
+
+function download(filename, content, type){
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+/* ==================== 主題 ==================== */
+function applyTheme(t){
+  state.theme = t;
+  document.body.classList.toggle('theme-boy', t === 'boy');
+  document.querySelectorAll('.theme-bar button').forEach(b =>
+    b.classList.toggle('active', b.dataset.theme === t)
+  );
+  save();
+}
+document.querySelectorAll('.theme-bar button').forEach(b =>
+  b.addEventListener('click', () => applyTheme(b.dataset.theme))
+);
+
+/* ==================== 小朋友管理 ==================== */
+function renderKids(){
+  const box = document.getElementById('kidList');
+  const counts = {};
+  state.activities.forEach(a => { counts[a.kidId] = (counts[a.kidId]||0)+1; });
+
+  box.innerHTML = state.kids.map(k => `
+    <div class="kid-card" style="background:linear-gradient(135deg,${k.color}22,#ffffff)">
+      <div class="kid-avatar">${k.avatar}</div>
+      <div class="kid-info">
+        <b>${esc(k.name)}</b>
+        <small>${counts[k.id] || 0} 個活動</small>
+      </div>
+      <button class="icon-btn" data-edit-kid="${k.id}" title="編輯">✏️</button>
+      <button class="icon-btn" data-del-kid="${k.id}" title="刪除">🗑️</button>
+    </div>
+  `).join('') + `
+    <div class="kid-add" id="addKid">＋ 新增小朋友</div>
+  `;
+
+  // 小朋友下拉選單
+  const sel = document.getElementById('kidSelect');
+  const keep = sel.value;
+  sel.innerHTML = state.kids.map(k =>
+    `<option value="${k.id}">${k.avatar} ${esc(k.name)}</option>`
+  ).join('');
+  if (state.kids.some(k => k.id === keep)) sel.value = keep;
+}
+
+document.getElementById('kidList').addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (btn?.dataset.editKid) return editKid(btn.dataset.editKid);
+  if (btn?.dataset.delKid)  return deleteKid(btn.dataset.delKid);
+  if (e.target.closest('#addKid')) return addKid();
+});
+
+function addKid(){
+  const name = prompt('小朋友的名字：', '');
+  if (name === null) return;
+  const trimmed = name.trim();
+  if (!trimmed){ alert('請輸入名字 🌸'); return; }
+
+  // 選頭像
+  const pool = state.theme === 'boy' ? AVATARS_BOY : AVATARS_GIRL;
+  const avatar = prompt(
+    `選一個頭像（輸入數字）：\n${pool.map((a,i) => `${i+1}. ${a}`).join('\n')}`,
+    '1'
+  );
+  const idx = Math.max(0, Math.min(pool.length - 1, (parseInt(avatar,10) || 1) - 1));
+
+  // 選顏色
+  const colors = ['#FF9EC4','#FFB7A5','#FFD98E','#A8DFC0','#A8D8EA','#C9B6F0'];
+  const kid = {
+    id: uid(),
+    name: trimmed,
+    avatar: pool[idx],
+    color: colors[state.kids.length % colors.length]
+  };
+  state.kids.push(kid);
+  save();
+  renderKids();
+  renderKidFilter();
+  renderAll();
+}
+
+function editKid(id){
+  const k = state.kids.find(x => x.id === id);
+  if (!k) return;
+
+  const name = prompt('修改名字：', k.name);
+  if (name === null) return;
+  const trimmed = name.trim();
+  if (!trimmed){ alert('名字不能空白 🌸'); return; }
+  k.name = trimmed;
+
+  const pool = ALL_AVATARS;
+  const cur = pool.indexOf(k.avatar);
+  const avatar = prompt(
+    `選一個頭像（輸入數字）：\n${pool.map((a,i) => `${i+1}. ${a}`).join('\n')}`,
+    String(cur >= 0 ? cur + 1 : 1)
+  );
+  if (avatar !== null){
+    const idx = Math.max(0, Math.min(pool.length - 1, (parseInt(avatar,10) || 1) - 1));
+    k.avatar = pool[idx];
+  }
+
+  const color = prompt('代表顏色（十六進位，例：#FF9EC4）：', k.color);
+  if (color && /^#[0-9A-Fa-f]{6}$/.test(color.trim())) k.color = color.trim();
+
+  save();
+  renderKids();
+  renderKidFilter();
+  renderAll();
+}
+
+function deleteKid(id){
+  const k = state.kids.find(x => x.id === id);
+  if (!k) return;
+  if (state.kids.length <= 1){ alert('至少需要保留一位小朋友 🌸'); return; }
+
+  const n = state.activities.filter(a => a.kidId === id).length;
+  const msg = n
+    ? `「${k.name}」有 ${n} 個活動，刪除小朋友會同時刪除這些活動。確定嗎？`
+    : `確定刪除「${k.name}」？`;
+  if (!confirm(msg)) return;
+
+  state.kids = state.kids.filter(x => x.id !== id);
+  state.activities = state.activities.filter(a => a.kidId !== id);
+  if (filterKid === id) filterKid = 'all';
+  if (editingId){
+    const cur = state.activities.find(a => a.id === editingId);
+    if (!cur) endEdit();
+  }
+  save();
+  renderKids();
+  renderKidFilter();
+  renderAll();
+}
+
+/* ==================== 篩選列 ==================== */
+function renderKidFilter(){
+  const box = document.getElementById('kidFilter');
+  const counts = { all: state.activities.length };
+  state.activities.forEach(a => { counts[a.kidId] = (counts[a.kidId]||0)+1; });
+
+  box.innerHTML = `
+    <button data-kid="all" class="${filterKid==='all'?'active':''}">
+      🌈 全部 <span style="opacity:.75">(${counts.all||0})</span>
+    </button>
+    ${state.kids.map(k => `
+      <button data-kid="${k.id}" class="${filterKid===k.id?'active':''}">
+        ${k.avatar} ${esc(k.name)}
+        <span style="opacity:.75">(${counts[k.id]||0})</span>
+      </button>
+    `).join('')}
+  `;
+}
+
+document.getElementById('kidFilter').addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  filterKid = btn.dataset.kid;
+  renderKidFilter();
+  renderAll();
+});
+
+/* ==================== 渲染 ==================== */
+function filteredActivities(){
+  return filterKid === 'all'
+    ? state.activities
+    : state.activities.filter(a => a.kidId === filterKid);
+}
+
+function renderAll(){
+  renderStats();
+  renderActivities();
+  renderChart();
+}
+
+function renderStats(){
+  const today = todayStr();
+  let done = 0, up = 0, money = 0;
+  filteredActivities().forEach(a => {
+    const list = getActive(a);
+    const d = list.filter(x => x < today);
+    done  += d.length;
+    up    += list.length - d.length;
+    money += d.length * (a.fee || 0);
+  });
+  document.getElementById('statKids').textContent  = state.kids.length;
+  document.getElementById('statDone').textContent  = done;
+  document.getElementById('statUp').textContent    = up;
+  document.getElementById('statMoney').textContent = '$' + money.toLocaleString();
+}
+
+function renderActivities(){
+  const box = document.getElementById('activityList');
+  const list = filteredActivities();
+
+  // 標題
+  const title = document.getElementById('listTitle');
+  if (filterKid === 'all'){
+    title.textContent = '📋 活動列表（全部小朋友）';
+  } else {
+    const k = kidById(filterKid);
+    title.textContent = `📋 ${k.avatar} ${k.name} 的活動`;
+  }
+
+  if (!list.length){
+    box.innerHTML = '<div class="card empty">🌈 還沒有活動紀錄，先在上面新增一個吧 👆</div>';
+    return;
+  }
+  box.innerHTML = list.map(actHTML).join('');
+}
+
+function actHTML(act){
+  const today = todayStr();
+  const cancelled = new Set(act.cancelled || []);
+  const all = getSessions(act);
+  const active = all.filter(d => !cancelled.has(d));
+  const done = active.filter(d => d < today);
+  const up = active.filter(d => d >= today);
+  const next = up[0];
+  const kid = kidById(act.kidId);
+
+  const rows = all.map(d => {
+    const wd = WD[parseDate(d).getDay()];
+    const off = cancelled.has(d);
+    let status = '待上', cls = '';
+    if (off){ status = '已取消'; cls = 'off'; }
+    else if (d < today){ status = '已上'; cls = 'done'; }
+    else if (d === today){ status = '今天'; cls = 'now'; }
+
+    const gcal = off ? '' :
+      `<a class="mini" target="_blank" rel="noopener" title="加入 Google 日曆"
+          href="${gcalLink(act, d)}">📅</a>`;
+
+    return `<li class="${cls}">
+      <span class="sdate">${d}（${wd}）</span>
+      <span class="stst">${status}</span>
+      ${gcal}
+      <button class="mini" data-cancel="${act.id}|${d}">${off ? '復原' : '請假'}</button>
+      <button class="mini" data-rm="${act.id}|${d}" title="移除這堂">✕</button>
+    </li>`;
+  }).join('');
+
+  const meta = [
+    `🕒 ${act.startTime || '—'}–${act.endTime || '—'}`,
+    `🗓️ ${schedDesc(act)}`,
+    act.location ? `📍 ${esc(act.location)}` : ''
+  ].filter(Boolean).join('　');
+
+  const pauseCount = (act.pauses || []).length;
+
+  return `<article class="card act" style="--c:${act.color || '#FF9EC4'}">
+    <div class="act-head">
+      <div style="flex:1">
+        <span class="owner" style="background:${kid.color}22;color:${kid.color};border-color:${kid.color}55">
+          ${kid.avatar} ${esc(kid.name)}
+        </span>
+        <h3>${esc(act.name)}</h3>
+        <div class="meta">${meta}</div>
+      </div>
+      <button class="icon-btn" data-edit="${act.id}" title="編輯">✏️</button>
+      <button class="icon-btn" data-del="${act.id}" title="刪除">🗑️</button>
+    </div>
+
+    <div class="chips">
+      <span class="chip ok">✅ 已上 ${done.length} 堂</span>
+      <span class="chip">⏳ 剩 ${up.length} 堂</span>
+      <span class="chip">📚 共 ${active.length} 堂</span>
+      ${next ? `<span class="chip next">🔔 下次：${next}（星期${WD[parseDate(next).getDay()]}）</span>` : ''}
+      ${pauseCount ? `<span class="chip pause">⏸️ ${pauseCount} 段暫停</span>` : ''}
+      <span class="chip money">💰 每堂 $${act.fee || 0}</span>
+      ${act.tuition ? `<span class="chip money">🏦 學費 $${act.tuition}</span>` : ''}
+      <span class="chip money">💸 已花費 $${(done.length * (act.fee || 0)).toLocaleString()}</span>
+    </div>
+
+    ${act.items ? `<p class="items">🎒 需帶：${esc(act.items)}</p>` : ''}
+
+    <details>
+      <summary>課堂列表（共 ${all.length} 堂）</summary>
+      <ul class="sessions">${rows || '<li>沒有課堂</li>'}</ul>
+      <div class="row-actions">
+        <button data-add-session="${act.id}">＋ 手動新增一堂</button>
+        <button data-ics="${act.id}">⬇️ 匯出此活動 .ics</button>
+      </div>
+    </details>
+  </article>`;
+}
+
+function renderChart(){
+  const today = todayStr();
+  const data = filteredActivities().map(a => {
+    const list = getActive(a);
+    const done = list.filter(d => d < today).length;
+    const kid = kidById(a.kidId);
+    return {
+      name: `${kid.avatar} ${a.name}`,
+      color: a.color || '#FF9EC4',
+      done, total: list.length
+    };
+  }).filter(d => d.total > 0);
+
+  const box = document.getElementById('chart');
+  if (!data.length){ box.innerHTML = '<p class="empty">🌸 還沒有課堂紀錄</p>'; return; }
+
+  const max = Math.max(...data.map(d => d.total), 1);
+  box.innerHTML = data.map(d => {
+    const pct = Math.round(d.done / d.total * 100);
+    const trackW = Math.max(24, Math.round(d.total / max * 100));
+    return `<div class="bar-row">
+      <div class="bar-label" title="${esc(d.name)}">${esc(d.name)}</div>
+      <div class="bar-track" style="width:${trackW}%">
+        <div class="bar-fill" style="width:${pct}%;background-color:${d.color}"></div>
+      </div>
+      <div class="bar-val">${d.done}/${d.total}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ==================== 表單：星期 & 每月第幾個 ==================== */
+(function buildWeekdays(){
+  document.getElementById('weekdayBox').innerHTML =
+    [1,2,3,4,5,6,0].map(w =>
+      `<label><input type="checkbox" name="weekday" value="${w}"><span>${WD[w]}</span></label>`
+    ).join('');
+  document.querySelector('[name=nthWeekday]').innerHTML =
+    [1,2,3,4,5,6,0].map(w => `<option value="${w}">星期${WD[w]}</option>`).join('');
+})();
+
+const form = document.getElementById('actForm');
+
+/* ==================== 排程面板切換 ==================== */
+function currentType(){
+  return form.querySelector('input[name=scheduleType]:checked').value;
+}
+function updatePanels(){
+  const t = currentType();
+  document.querySelectorAll('.sched-panel').forEach(p => {
+    p.hidden = !p.dataset.panel.split(' ').includes(t);
+  });
+  const lblStart = document.getElementById('lblStart');
+  const lblEnd   = document.getElementById('lblEnd');
+  if (t === 'once'){
+    lblStart.textContent = '📆 活動日期 *';
+    lblEnd.textContent   = '🏁 結束日期（單次活動不需要）';
+  } else if (t === 'range'){
+    lblStart.textContent = '📆 開始日期 *';
+    lblEnd.textContent   = '🏁 結束日期 *（連續每天到這天）';
+  } else if (t === 'custom'){
+    lblStart.textContent = '📆 開始日期（可留空）';
+    lblEnd.textContent   = '🏁 結束日期（不需要）';
+  } else {
+    lblStart.textContent = '📆 開始日期 *';
+    lblEnd.textContent   = '🏁 結束日期（留空＝自動 3 個月）';
+  }
+  updatePreview();
+}
+form.querySelectorAll('input[name=scheduleType]').forEach(r =>
+  r.addEventListener('change', updatePanels)
+);
+
+/* ==================== 暫停期間 ==================== */
+function renderPauses(){
+  const box = document.getElementById('pauseList');
+  if (!pauses.length){ box.innerHTML = ''; return; }
+  box.innerHTML = pauses.map((p,i) => `
+    <div class="pause-row" data-i="${i}">
+      <input type="date" class="pFrom" value="${p.from || ''}">
+      <span class="tilde">～</span>
+      <input type="date" class="pTo" value="${p.to || ''}">
+      <button type="button" class="pDel" title="刪除">✕</button>
+    </div>`).join('');
+}
+document.getElementById('addPause').addEventListener('click', () => {
+  pauses.push({ from: '', to: '' });
+  renderPauses();
+});
+document.getElementById('pauseList').addEventListener('input', e => {
+  const row = e.target.closest('.pause-row');
+  if (!row) return;
+  const i = +row.dataset.i;
+  pauses[i].from = row.querySelector('.pFrom').value;
+  pauses[i].to   = row.querySelector('.pTo').value;
+  updatePreview();
+});
+document.getElementById('pauseList').addEventListener('click', e => {
+  if (!e.target.classList.contains('pDel')) return;
+  const row = e.target.closest('.pause-row');
+  pauses.splice(+row.dataset.i, 1);
+  renderPauses();
+  updatePreview();
+});
+
+/* ==================== 從表單讀出臨時活動物件 ==================== */
+function formToAct(){
+  const v = sel => form.querySelector(sel)?.value ?? '';
+  const monthDays = String(v('[name=monthDays]'))
+    .split(/[,，\s]+/).map(x => parseInt(x,10))
+    .filter(n => n >= 1 && n <= 31);
+  return {
+    scheduleType: currentType(),
+    weekdays: [...form.querySelectorAll('input[name=weekday]:checked')].map(x => +x.value),
+    monthDays,
+    nth: +v('[name=nth]') || 1,
+    nthWeekday: +v('[name=nthWeekday]'),
+    customDates: v('[name=customDates]'),
+    startDate: v('[name=startDate]'),
+    endDate: v('[name=endDate]'),
+    pauses: pauses.filter(p => p.from && p.to)
+  };
+}
+
+/* ==================== 即時預覽 ==================== */
+function updatePreview(){
+  const box = document.getElementById('preview');
+  let act;
+  try { act = formToAct(); } catch(e){ return; }
+
+  const dates = generateDates(act).filter(d =>
+    !act.pauses.some(p => d >= p.from && d <= p.to)
+  );
+
+  if (!dates.length){
+    box.innerHTML = '🌸 填好上面的資料，這裡會即時顯示會產生幾堂課。';
+    return;
+  }
+
+  const shown = dates.slice(0, 14);
+  const more  = dates.length - shown.length;
+
+  box.innerHTML = `✨ 將會產生 <b>${dates.length}</b> 堂課
+    ${act.pauses.length ? `（已扣掉 ${act.pauses.length} 段暫停期間）` : ''}
+    <div class="dates">
+      ${shown.map(d => `<span class="dtag">${d}（${WD[parseDate(d).getDay()]}）</span>`).join('')}
+      ${more > 0 ? `<span class="dtag">…還有 ${more} 堂</span>` : ''}
+    </div>`;
+}
+
+form.addEventListener('input', updatePreview);
+form.addEventListener('change', updatePreview);
+
+/* ==================== 表單重設 / 編輯 ==================== */
+function resetForm(){
+  form.reset();
+  form.querySelector('[name=startDate]').value = todayStr();
+  form.querySelector('[name=color]').value = '#FF9EC4';
+  form.querySelector('[name=startTime]').value = '16:00';
+  form.querySelector('[name=endTime]').value = '17:00';
+  form.querySelector('input[name=scheduleType][value=weekly]').checked = true;
+  // 預設選目前篩選的小朋友
+  const sel = document.getElementById('kidSelect');
+  if (filterKid !== 'all' && state.kids.some(k => k.id === filterKid)) sel.value = filterKid;
+  pauses = [];
+  renderPauses();
+  updatePanels();
+}
+
+function endEdit(){
+  editingId = null;
+  document.getElementById('formTitle').textContent = '➕ 新增活動';
+  document.getElementById('submitBtn').textContent = '✿ 新增活動 ✿';
+  document.getElementById('cancelEdit').hidden = true;
+  resetForm();
+}
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+
+  const weekdays = [...form.querySelectorAll('input[name=weekday]:checked')].map(x => +x.value);
+  const t = currentType();
+  const kidId = form.querySelector('[name=kidId]').value;
+
+  if (!kidId){ alert('請選擇一位小朋友 🌸'); return; }
+  if ((t === 'weekly' || t === 'biweekly') && !weekdays.length){
+    alert('請至少選擇一個上課日 🌸'); return;
+  }
+  if (t === 'monthlyDate'){
+    const md = String(form.querySelector('[name=monthDays]').value)
+      .split(/[,，\s]+/).map(x => parseInt(x,10)).filter(n => n >= 1 && n <= 31);
+    if (!md.length){ alert('請輸入每月幾號，例如：5,20 🌸'); return; }
+  }
+  if (t === 'custom' && !form.querySelector('[name=customDates]').value.trim()){
+    alert('請輸入自訂日期，例如：2025-03-01, 2025-03-15 🌸'); return;
+  }
+  if (t !== 'custom' && !form.querySelector('[name=startDate]').value){
+    alert('請填寫開始日期 🌸'); return;
+  }
+  if (t === 'range' && !form.querySelector('[name=endDate]').value){
+    alert('「連續幾天」需要填寫結束日期 🌸'); return;
+  }
+
+  const data = {
+    kidId,
+    scheduleType: t,
+    name:      form.querySelector('[name=name]').value.trim(),
+    location:  form.querySelector('[name=location]').value.trim(),
+    weekdays,
+    monthDays: String(form.querySelector('[name=monthDays]').value)
+                 .split(/[,，\s]+/).map(x => parseInt(x,10)).filter(n => n >= 1 && n <= 31),
+    nth:        +form.querySelector('[name=nth]').value || 1,
+    nthWeekday: +form.querySelector('[name=nthWeekday]').value,
+    customDates: form.querySelector('[name=customDates]').value.trim(),
+    startTime: form.querySelector('[name=startTime]').value,
+    endTime:   form.querySelector('[name=endTime]').value,
+    startDate: form.querySelector('[name=startDate]').value,
+    endDate:   form.querySelector('[name=endDate]').value,
+    fee:       +form.querySelector('[name=fee]').value || 0,
+    tuition:   +form.querySelector('[name=tuition]').value || 0,
+    color:     form.querySelector('[name=color]').value,
+    items:     form.querySelector('[name=items]').value.trim(),
+    pauses:    pauses.filter(p => p.from && p.to)
+  };
+
+  if (!data.name){ alert('請填寫活動名稱 🌸'); return; }
+
+  if (editingId){
+    const act = state.activities.find(x => x.id === editingId);
+    Object.assign(act, data);
+  } else {
+    state.activities.push({
+      id: uid(), ...data,
+      excluded: [], extra: [], cancelled: []
+    });
+  }
+
+  save();
+  endEdit();
+  renderKids();
+  renderKidFilter();
+  renderAll();
+});
+
+document.getElementById('cancelEdit').addEventListener('click', endEdit);
+
+form.querySelectorAll('.swatches button').forEach(b => {
+  b.addEventListener('click', () => {
+    form.querySelector('[name=color]').value = b.dataset.color;
+  });
+});
+
+/* ==================== 活動列表互動 ==================== */
+document.getElementById('activityList').addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  const ds = btn.dataset;
+
+  if (ds.edit)            startEdit(ds.edit);
+  else if (ds.del)        deleteActivity(ds.del);
+  else if (ds.cancel)     toggleCancel(ds.cancel);
+  else if (ds.rm)         removeSession(ds.rm);
+  else if (ds.addSession) addSession(ds.addSession);
+  else if (ds.ics)        exportOneICS(ds.ics);
+});
+
+function startEdit(id){
+  const a = state.activities.find(x => x.id === id);
+  if (!a) return;
+  normalize(a);
+  editingId = id;
+
+  const q = sel => form.querySelector(sel);
+  q('[name=kidId]').value       = a.kidId || state.kids[0].id;
+  q('[name=name]').value        = a.name || '';
+  q('[name=location]').value    = a.location || '';
+  q('[name=startTime]').value   = a.startTime || '16:00';
+  q('[name=endTime]').value     = a.endTime || '17:00';
+  q('[name=startDate]').value   = a.startDate || '';
+  q('[name=endDate]').value     = a.endDate || '';
+  q('[name=fee]').value         = a.fee || 0;
+  q('[name=tuition]').value     = a.tuition || 0;
+  q('[name=color]').value       = a.color || '#FF9EC4';
+  q('[name=items]').value       = a.items || '';
+  q('[name=monthDays]').value   = (a.monthDays || []).join(',');
+  q('[name=customDates]').value = a.customDates || '';
+  q('[name=nth]').value         = a.nth || 1;
+  q('[name=nthWeekday]').value  = (a.nthWeekday !== undefined) ? a.nthWeekday : 6;
+
+  const radio = form.querySelector(`input[name=scheduleType][value="${a.scheduleType || 'weekly'}"]`);
+  if (radio) radio.checked = true;
+
+  form.querySelectorAll('input[name=weekday]').forEach(cb => {
+    cb.checked = (a.weekdays || []).includes(+cb.value);
+  });
+
+  pauses = (a.pauses || []).map(p => ({ from: p.from, to: p.to }));
+  renderPauses();
+
+  document.getElementById('formTitle').textContent = '✏️ 編輯活動';
+  document.getElementById('submitBtn').textContent = '✿ 儲存修改 ✿';
+  document.getElementById('cancelEdit').hidden = false;
+
+  updatePanels();
+  form.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function deleteActivity(id){
+  const a = state.activities.find(x => x.id === id);
+  if (!a) return;
+  if (!confirm(`確定刪除「${a.name}」？所有課堂紀錄會一併移除。`)) return;
+  state.activities = state.activities.filter(x => x.id !== id);
+  if (editingId === id) endEdit();
+  save(); renderKids(); renderKidFilter(); renderAll();
+}
+
+function toggleCancel(key){
+  const [id, d] = key.split('|');
+  const a = state.activities.find(x => x.id === id);
+  if (!a) return;
+  a.cancelled = a.cancelled || [];
+  a.cancelled = a.cancelled.includes(d)
+    ? a.cancelled.filter(x => x !== d)
+    : [...a.cancelled, d];
+  save(); renderAll();
+}
+
+function removeSession(key){
+  const [id, d] = key.split('|');
+  const a = state.activities.find(x => x.id === id);
+  if (!a) return;
+  if ((a.extra || []).includes(d)){
+    a.extra = a.extra.filter(x => x !== d);
+  } else if (a.scheduleType === 'custom'){
+    a.customDates = String(a.customDates || '')
+      .split(/[,，\s]+/).map(s => s.trim())
+      .filter(s => s && s !== d).join(', ');
+  } else {
+    a.excluded = [...new Set([...(a.excluded || []), d])];
+  }
+  a.cancelled = (a.cancelled || []).filter(x => x !== d);
+  save(); renderAll();
+}
+
+function addSession(id){
+  const a = state.activities.find(x => x.id === id);
+  if (!a) return;
+  const input = prompt('輸入課堂日期（格式 YYYY-MM-DD）：', todayStr());
+  if (input === null) return;
+  const d = input.trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || isNaN(parseDate(d).getTime())){
+    alert('日期格式不正確，請用 YYYY-MM-DD，例如 2025-03-08');
+    return;
+  }
+  a.extra = [...new Set([...(a.extra || []), d])];
+  a.excluded = (a.excluded || []).filter(x => x !== d);
+  a.cancelled = (a.cancelled || []).filter(x => x !== d);
+  save(); renderAll();
+}
+
+/* ==================== 匯出 ==================== */
+function exportOneICS(id){
+  const a = state.activities.find(x => x.id === id);
+  if (!a) return;
+  const kid = kidById(a.kidId);
+  download(`${kid.name}-${a.name}.ics`, buildICS([a]), 'text/calendar;charset=utf-8');
+}
+
+document.getElementById('exportAll').addEventListener('click', () => {
+  if (!state.activities.length){ alert('還沒有任何活動 🌸'); return; }
+  download('課外活動.ics', buildICS(state.activities), 'text/calendar;charset=utf-8');
+});
+
+document.getElementById('clearAll').addEventListener('click', () => {
+  if (!state.activities.length && state.kids.length <= 1) return;
+  if (!confirm('確定清除全部資料（包含小朋友與活動）？此動作無法復原。')) return;
+  state = {
+    kids: [{ id: uid(), name: '寶貝', avatar: '🧒', color: '#FF9EC4' }],
+    activities: [], theme: state.theme, kidFilter: 'all'
+  };
+  filterKid = 'all';
+  save(); endEdit();
+  renderKids(); renderKidFilter(); renderAll();
+});
+
+/* ==================== 啟動 ==================== */
+applyTheme(state.theme || 'girl');
+resetForm();
+renderKids();
+renderKidFilter();
+renderAll();
+</script>
+</body>
+</html>
